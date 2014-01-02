@@ -80,6 +80,15 @@ module.exports = function (grunt) {
                     'dist/exchangeRates.js': ['debug/exchangeRates.js']
                 }
             }
+        },
+        qunit: {
+            all: {
+                options: {
+                    urls: [
+                        'http://localhost:3000/test.html'
+                    ]
+                }
+            }
         }
     });
 
@@ -90,8 +99,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.registerTask('default', function () { console.log("Does nothing.."); });
     grunt.registerTask('dist', ['clean:debug', 'clean:dist', 'copy:debug', 'coffee', 'copy:dist', 'uglify:dist', 'express:dist']);
     grunt.registerTask('debug', ['clean:debug', 'copy:debug', 'coffee', 'express:debug', 'watch']);
-
-}
+    grunt.registerTask('test', ['clean:debug', 'copy:debug', 'coffee', 'express:debug', 'qunit:all']);
+};
