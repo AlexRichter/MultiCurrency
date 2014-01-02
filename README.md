@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/AlexRichter/MultiCurrency.png?branch=master)](https://travis-ci.org/AlexRichter/MultiCurrency)
+
 # Multi Currency Plugin
 
 ## Alex's Build script
