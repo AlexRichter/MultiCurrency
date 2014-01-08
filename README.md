@@ -9,7 +9,7 @@
 To build this you need to have [Node.js](http://nodejs.org/) installed, once installed:
 
 +   Open command prompt to directory
-+   Run `npm install`, this will install all project dependencies (including Grunt)
++   Run `npm install --dev`, this will install all project dependencies (including Grunt)
 +   The application can then be built using grunt in two modes:
     +   `grunt debug` will build the application unminified and start a server on localhost:3000
         +   the application will automatically rebuild when a file in /plugin is changed, the browser can automatically reload these changes using the [LiveReload Plugin](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=en)
