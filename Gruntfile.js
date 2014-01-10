@@ -76,8 +76,7 @@ module.exports = function (grunt) {
         uglify: {
             dist: {
                 files: {
-                    'dist/multiCurrency.js': ['debug/multiCurrency.js'],
-                    'dist/exchangeRates.js': ['debug/exchangeRates.js']
+                    'dist/multiCurrency.js': ['debug/multiCurrency.js']
                 }
             }
         },

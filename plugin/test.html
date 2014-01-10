@@ -17,7 +17,7 @@
             timezone:1,
             i18n:true,
             plugins:{
-                multicurrency:{src:'multiCurrency.js', local_currency: 'CHF'}
+                multicurrency:{src:'multiCurrency.js', exrate: 2}
             }
         });
         dcs.track();
@@ -46,22 +46,10 @@
         Webtrends.dcss.dcsobj_0.WT[name] = value;
     };
 
-    $_exchangeRate = {CHF: '2'};
-
     asyncTest("Test tx_e='a' with no other values", function(){
         window.testing = function(input){
             p = getParams(input);
             equal(p['WT.tx_e'], 'a', 'Nothing changed');
-            start();
-        };
-        changeDCS('tx_e', 'a');
-        dcsMultiTrack();
-    });
-
-    asyncTest("Test that tx_lc is set to local currency", function(){
-        window.testing = function(input){
-            p = getParams(input);
-            equal(p['WT.tx_lc'], 'CHF', 'tx_lc correctly set');
             start();
         };
         changeDCS('tx_e', 'a');
@@ -93,6 +81,33 @@
         changeDCS('tx_s', '33.33');
         dcsMultiTrack();
     });
+
+    asyncTest("Test tx_e='r' with tx_s=0", function(){
+        window.testing = function(input){
+            p = getParams(input);
+            equal(typeof p['WT.tx_s'], "undefined", "tx_s successfully removed");
+            equal(p['WT.tx_sr_site'], 0, "tx_sr_site successfully set");
+            equal(p['WT.tx_sr'], 0, "tx_sr successfully set");
+            start();
+        };
+        changeDCS('tx_e', 'r');
+        changeDCS('tx_s', '0');
+        dcsMultiTrack();
+    });
+
+    asyncTest("Test tx_e='r' with tx_s=incorrectvalue", function(){
+        window.testing = function(input){
+            p = getParams(input);
+            equal(typeof p['WT.tx_s'], "undefined", "tx_s successfully removed");
+            equal(p['WT.tx_sr_site'], "help", "tx_sr_site successfully set");
+            equal(p['WT.tx_sr'], 0, "tx_sr successfully set");
+            start();
+        };
+        changeDCS('tx_e', 'r');
+        changeDCS('tx_s', 'help');
+        dcsMultiTrack();
+    });
+
 
     asyncTest("Test tx_e='v' with tx_s", function(){
         window.testing = function(input){

@@ -1,6 +1,9 @@
+# TODO: fix if the value is 0.00
+# TODO: fix if they can't find the currency conversion
 multiCurrency = (dcs, options) ->
   # need to track a, p, v and r tx_e's
-  lc = if options.local_currency? then options.local_currency else 'EUR'
+  exrate = if options.exrate? then options.exrate else 0
+
   dcs.addTransform ((dcsObject, o) ->
     # Put this function here for ease of accessing dcsObject and o
     getParams = (params) ->
@@ -19,8 +22,10 @@ multiCurrency = (dcs, options) ->
       split = input.split(';')
       v = []
       for s in split
-        if not isNaN(s) and s > 0
-          v.push ($_exchangeRate[lc] * s).toFixed(2)
+        if not isNaN(s) and s >= 0
+          v.push (exrate * s).toFixed(2)
+        else
+          v.push (0)
       v.join(';')
 
     # Need to consider dcs params and argsa
@@ -35,21 +40,19 @@ multiCurrency = (dcs, options) ->
       txe_p = if txe == 'p' then '' else txe
       values["tx_s#{txe_p}_site"] = values['tx_s']
 
-      if $_exchangeRate[lc]?
-        values["tx_s#{txe_p}"] = calculateValues(values['tx_s']) if values['tx_s']?
-        if txe == 'p'
-          # We need to do extra if it's a p
-          extras = ['z_shippingcost', 'z_ordertotal', 'z_offers']
-          evalues = getParams(extras)
-          for v in extras
-            if evalues[v]?
-              values["#{v}_site"] = evalues[v]
-              values["#{v}"] = calculateValues(evalues[v])
-        else
-          values['tx_s'] = null
+      values["tx_s#{txe_p}"] = calculateValues(values['tx_s']) if values['tx_s']?
+      if txe == 'p'
+        # We need to do extra if it's a p
+        extras = ['z_shippingcost', 'z_ordertotal', 'z_offers']
+        evalues = getParams(extras)
+        for v in extras
+          if evalues[v]?
+            values["#{v}_site"] = evalues[v]
+            values["#{v}"] = calculateValues(evalues[v])
+      else
+        values['tx_s'] = null
 
       delete values['tx_e']
-      values['tx_lc'] = lc
 
       for key, value of values
         o.argsa.push('WT.' + key)
