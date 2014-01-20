@@ -56,75 +56,72 @@
         dcsMultiTrack();
     });
 
-    asyncTest("Test tx_e='a' with tx_s", function(){
+    asyncTest("Test with tx_sa", function(){
         window.testing = function(input){
             p = getParams(input);
             equal(typeof p['WT.tx_s'], "undefined", "tx_s successfully removed");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
             equal(p['WT.tx_sa_site'], '55.5', "tx_sa_site successfully set");
             equal(p['WT.tx_sa'], 111, "tx_sa successfully set");
             start();
         };
-        changeDCS('tx_e', 'a');
-        changeDCS('tx_s', '55.5');
+        changeDCS('tx_sa', '55.5');
+        changeDCS('tx_s', null);
+        changeDCS('tx_sv', null);
         dcsMultiTrack();
     });
 
-    asyncTest("Test tx_e='r' with tx_s", function(){
+    asyncTest("Test with tx_s=0", function(){
         window.testing = function(input){
             p = getParams(input);
-            equal(typeof p['WT.tx_s'], "undefined", "tx_s successfully removed");
-            equal(p['WT.tx_sr_site'], 33.33, "tx_sr_site successfully set");
-            equal(p['WT.tx_sr'], 66.66, "tx_sr successfully set");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
+            equal(p['WT.tx_s_site'], 0, "tx_s_site successfully set");
+            equal(p['WT.tx_s'], 0, "tx_s successfully set");
             start();
         };
-        changeDCS('tx_e', 'r');
-        changeDCS('tx_s', '33.33');
-        dcsMultiTrack();
-    });
-
-    asyncTest("Test tx_e='r' with tx_s=0", function(){
-        window.testing = function(input){
-            p = getParams(input);
-            equal(typeof p['WT.tx_s'], "undefined", "tx_s successfully removed");
-            equal(p['WT.tx_sr_site'], 0, "tx_sr_site successfully set");
-            equal(p['WT.tx_sr'], 0, "tx_sr successfully set");
-            start();
-        };
-        changeDCS('tx_e', 'r');
+        changeDCS('tx_sa', null);
+        changeDCS('tx_sv', null);
         changeDCS('tx_s', '0');
         dcsMultiTrack();
     });
 
-    asyncTest("Test tx_e='r' with tx_s=incorrectvalue", function(){
+    asyncTest("Test with tx_s=incorrectvalue", function(){
         window.testing = function(input){
             p = getParams(input);
-            equal(typeof p['WT.tx_s'], "undefined", "tx_s successfully removed");
-            equal(p['WT.tx_sr_site'], "help", "tx_sr_site successfully set");
-            equal(p['WT.tx_sr'], 0, "tx_sr successfully set");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
+            equal(p['WT.tx_s_site'], "help", "tx_s_site successfully set");
+            equal(p['WT.tx_s'], 0, "tx_s successfully set");
             start();
         };
-        changeDCS('tx_e', 'r');
+        changeDCS('tx_sa', null);
+        changeDCS('tx_sv', null);
         changeDCS('tx_s', 'help');
         dcsMultiTrack();
     });
 
 
-    asyncTest("Test tx_e='v' with tx_s", function(){
+    asyncTest("Test with tx_sv", function(){
         window.testing = function(input){
             p = getParams(input);
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
             equal(typeof p['WT.tx_s'], "undefined", "tx_s successfully removed");
             equal(p['WT.tx_sv_site'], 1111.2222, "tx_sv_site successfully set");
             equal(p['WT.tx_sv'], 2222.44, "tx_sv successfully set");
             start();
         };
-        changeDCS('tx_e', 'v');
-        changeDCS('tx_s', '1111.2222');
+        changeDCS('tx_sa', null);
+        changeDCS('tx_s', null);
+        changeDCS('tx_sv', '1111.2222');
         dcsMultiTrack();
     });
 
     asyncTest("Test tx_e='p' with tx_s but not the extra values", function(){
         window.testing = function(input){
             p = getParams(input);
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
             equal(p['WT.tx_s'], 88.88, "tx_s successfully set");
             equal(p['WT.tx_s_site'], 44.44, "tx_s_site successfully set");
             start();
@@ -137,6 +134,8 @@
     asyncTest("Test tx_e='p' with only z_shippingcost", function(){
         window.testing = function(input){
             p = getParams(input);
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
             equal(p['WT.tx_s'], 88.88, "tx_s successfully set");
             equal(p['WT.tx_s_site'], 44.44, "tx_s_site successfully set");
             equal(p['WT.z_shippingcost'], 21, "z_shippingcost correct");
@@ -152,6 +151,8 @@
     asyncTest("Test tx_e='p' with all z_", function(){
         window.testing = function(input){
             p = getParams(input);
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
             equal(p['WT.tx_s'], 88.88, "tx_s successfully set");
             equal(p['WT.tx_s_site'], 44.44, "tx_s_site successfully set");
             equal(p['WT.z_shippingcost'], 21, "z_shippingcost correct");
@@ -173,6 +174,8 @@
     asyncTest("Test multiple values in tx_s", function(){
         window.testing = function(input){
             p = getParams(input);
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
             equal(p['WT.tx_s'], '21.00%3B41.00%3B61.00', "tx_s successfully set");
             equal(p['WT.tx_s_site'], "10.5%3B20.5%3B30.5" , "tx_s_site successfully set");
             start();
@@ -185,6 +188,8 @@
     asyncTest("Test dcsMultiTrack with tx_e='p'", function(){
         window.testing = function(input){
             p = getParams(input);
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
             equal(p['WT.tx_s'], 40.8, "tx_s successfully set");
             equal(p['WT.tx_s_site'], 20.4, "tx_s_site successfully set");
             start();
@@ -197,6 +202,8 @@
     asyncTest("Test dcsMultiTrack with tx_e='p' and z_ordertotal", function(){
         window.testing = function(input){
             p = getParams(input);
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sa successfully removed");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
             equal(p['WT.tx_s'], 40.8, "tx_s successfully set");
             equal(p['WT.tx_s_site'], 20.4, "tx_s_site successfully set");
             equal(p['WT.z_ordertotal'], 101.2, "z_ordertotal correct");

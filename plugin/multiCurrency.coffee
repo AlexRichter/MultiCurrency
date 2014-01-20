@@ -1,8 +1,9 @@
-# TODO: fix if the value is 0.00
-# TODO: fix if they can't find the currency conversion
+
 multiCurrency = (dcs, options) ->
   # need to track a, p, v and r tx_e's
   exrate = if options.exrate? then options.exrate else 0
+
+  console.log dcs
 
   dcs.addTransform ((dcsObject, o) ->
     # Put this function here for ease of accessing dcsObject and o
@@ -29,35 +30,39 @@ multiCurrency = (dcs, options) ->
       v.join(';')
 
     # Need to consider dcs params and argsa
-    params = ['tx_e', 'tx_s']
+    params = ['tx_s', 'tx_sv', 'tx_sa']
     values = getParams(params)
     # We have the values now let's do the business
-    events = ['a', 'p', 'v', 'r']
-    txe = values['tx_e']
-    if txe in events
-      # We have an event we are interested in
-      # We need to rename tx_s to tx_s event
-      txe_p = if txe == 'p' then '' else txe
-      values["tx_s#{txe_p}_site"] = values['tx_s']
+    new_values = []
 
-      values["tx_s#{txe_p}"] = calculateValues(values['tx_s']) if values['tx_s']?
-      if txe == 'p'
-        # We need to do extra if it's a p
-        extras = ['z_shippingcost', 'z_ordertotal', 'z_offers']
-        evalues = getParams(extras)
-        for v in extras
-          if evalues[v]?
-            values["#{v}_site"] = evalues[v]
-            values["#{v}"] = calculateValues(evalues[v])
-      else
-        values['tx_s'] = null
+    extras = ['z_shippingcost', 'z_ordertotal', 'z_offers']
+    evalues = getParams(extras)
 
-      delete values['tx_e']
+    
+    for p in params
+      if values[p]?
+        new_values["#{p}_site"] = values[p]
+        new_values[p] = calculateValues(values[p])
+        if p == 'tx_s'
+          # We need to do extra if it's a p          
+          for v in extras
+            if evalues[v]?
+              new_values["#{v}_site"] = evalues[v]
+              new_values["#{v}"] = calculateValues(evalues[v])
 
-      for key, value of values
-        o.argsa.push('WT.' + key)
-        o.argsa.push(value)
-      return true
+    for key, value of new_values
+      o.argsa.push('WT.' + key)
+      o.argsa.push(value)
+
+    o.finish = ->
+      for p in params
+        delete dcsObject.WT[p] 
+        delete dcsObject.WT["#{p}_site"]
+      for e in extras
+        delete dcsObject.WT[e]
+        delete dcsObject.WT["#{e}_site"] 
+
+    return true
   ), "all"
 Webtrends.registerPlugin "multicurrency", (dcs, options) ->
   multiCurrency(dcs, options)
