@@ -71,6 +71,20 @@
         dcsMultiTrack();
     });
 
+    asyncTest("Test with tx_sa blank value", function(){
+        window.testing = function(input){
+            p = getParams(input);
+            equal(typeof p['WT.tx_s'], "undefined", "tx_s successfully removed");
+            equal(typeof p['WT.tx_sv'], "undefined", "tx_sv successfully removed");
+            equal(typeof p['WT.tx_sa'], "undefined", "tx_sv successfully removed");
+            start();
+        };
+        changeDCS('tx_sa', '5.5');
+        changeDCS('tx_s', null);
+        changeDCS('tx_sv', null);
+        dcsMultiTrack('WT.tx_sa', '');
+    });
+
     asyncTest("Test with tx_s=0", function(){
         window.testing = function(input){
             p = getParams(input);

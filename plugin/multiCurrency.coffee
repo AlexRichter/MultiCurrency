@@ -40,7 +40,7 @@ multiCurrency = (dcs, options) ->
 
     
     for p in params
-      if values[p]?
+      if values[p]? and values[p] != ""
         new_values["#{p}_site"] = values[p]
         new_values[p] = calculateValues(values[p])
         if p == 'tx_s'
